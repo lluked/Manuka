@@ -1,0 +1,5 @@
+# Basic Settings
+server.name: Kibana-01
+server.host: "0.0.0.0"
+server.basePath: "/xyz"
+elasticsearch.hosts: ["http://elasticsearch:9200"]

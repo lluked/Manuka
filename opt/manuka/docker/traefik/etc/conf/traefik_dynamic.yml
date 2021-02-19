@@ -1,0 +1,35 @@
+# /etc/traefik/conf/traefik_dynamic.yml
+http:
+  routers:
+    api:
+      entryPoints:
+        - websecure
+      rule: PathPrefix(`/api`)
+      service: api@internal
+      middlewares:
+        - traefik-auth
+      tls: {}
+    dashboard:
+      entryPoints:
+        - websecure
+      rule: PathPrefix(`/dashboard`)
+      service: dashboard@internal
+      middlewares:
+        - traefik-auth
+        - dashboard-redirect
+        - dashboard-stripprefix
+      tls: {}
+  middlewares:
+    traefik-auth:
+      basicAuth:
+        usersFile: etc/traefik/conf/traefik.htpasswd 
+    dashboard-redirect:
+      redirectRegex:
+        regex: "^(http:\\/\\/(\\[[\\w:.]+\\]|[\\w\\._-]+)(:\\d+)?)\\/$"
+        replacement: "${1}/dashboard/"
+        permanent: true
+    dashboard-stripprefix:
+      stripPrefix:
+        prefixes:
+          - "/dashboard/"
+          - "/dashboard"

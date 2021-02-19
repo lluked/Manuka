@@ -1,0 +1,44 @@
+version: '3.8'
+# Services
+services:
+  # Elasticsearch Service
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:$ELASTIC_VERSION
+    container_name: elasticsearch
+    restart: always
+    cap_add: ['IPC_LOCK']
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    environment:
+      ES_JAVA_OPTS: "-Xms1024m -Xmx1024m"
+    healthcheck:
+      test: curl -s -XGET 'http://127.0.0.1:9200/_cat/health'
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - $baseDir/docker/elastic/elasticsearch/share/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - elasticsearch:/data
+    # ports:
+    #  - "9200:9200"
+    #  - "9300:9300"
+    networks:
+      - elastic
+# Volumes
+volumes:
+  # Elasticsearch Volume
+  elasticsearch:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $baseDir/mnt/elasticsearch
+# Networks
+networks:
+  # Elastic Network
+  elastic:
