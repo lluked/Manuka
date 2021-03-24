@@ -4,7 +4,7 @@ data "template_file" "script" {
 
   vars = {
     timezone = var.timezone,
-    vmUser = var.vmUser,
+    vmUser = "ubuntu",
     traefikUser = var.traefikUser,
     traefikPassword = var.traefikPassword,
     kibanaUser = var.kibanaUser,

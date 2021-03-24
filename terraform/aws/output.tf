@@ -18,7 +18,7 @@ output "ssh_port" {
 }
 
 output "ssh_user" {
-  value = var.vmUser
+  value = "ubuntu"
 }
 
 output "ssh_private_key" {
