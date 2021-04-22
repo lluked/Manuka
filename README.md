@@ -23,6 +23,14 @@ This application stack uses docker compose and is intended to be deployed with T
 - Clone manuka repo
 - Open terminal in directory "./Manuka/terraform/aws" or "./Manuka/terraform/azure" and run 'terraform init'
 - Run 'terraform apply' and supply variables or alternatively create .tfvars file beforehand
+
+  Sample terraform.tfvars
+  ```
+  traefikUser = "user_for_proxy_to_traefik_dashboard"
+  traefikPassword = "password_for_proxy_to_traefik_dashboard"
+  kibanaUser = "user_for_kibana"
+  kibanaPassword = "password_for_kibana"
+  ```
 - On apply:
   - SSH private and public keys are automatically created and outputted to "./keys/"
   - Access for SSH, Kibana and the Traefik dashboard is provided in output
