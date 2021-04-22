@@ -42,11 +42,6 @@ variable "timezone" {
   default = "UTC"
 }
 
-variable "vmUser" {
-    type = string
-    description = "Username for virtual machine"
-}
-
 variable "traefikUser" {
   default = "traefik"
 }
