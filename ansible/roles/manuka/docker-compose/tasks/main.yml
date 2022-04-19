@@ -1,0 +1,102 @@
+---
+
+- name: Install python3-pip, to install passlib used by ansible htpasswd
+  ansible.builtin.apt:
+    name: ['python3-pip']
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Install passlib
+  ansible.builtin.pip:
+    name: ['passlib']
+
+- name: Create manuka directory
+  ansible.builtin.file:
+    path: "{{ project_install_directory }}/manuka"
+    state: directory
+    owner: 1000
+    group: 1000
+    mode: '0755'
+  become: true
+
+- name: Create manuka subdirectories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: 1000
+    group: 1000
+    mode: '0755'
+  loop:
+    - "{{ project_install_directory }}/manuka/data"
+    - "{{ project_install_directory }}/manuka/data/honeypot"
+    - "{{ project_install_directory }}/manuka/data/honeypot/cowrie"
+    - "{{ project_install_directory }}/manuka/data/honeypot/cowrie/dl"
+    - "{{ project_install_directory }}/manuka/data/honeypot/cowrie/etc"
+    - "{{ project_install_directory }}/manuka/data/honeypot/cowrie/tty"
+    - "{{ project_install_directory }}/manuka/data/elasticsearch"
+    - "{{ project_install_directory }}/manuka/docker"
+    - "{{ project_install_directory }}/manuka/log"
+    - "{{ project_install_directory }}/manuka/log/traefik"
+    - "{{ project_install_directory }}/manuka/log/honeypot"
+    - "{{ project_install_directory }}/manuka/log/honeypot/cowrie"
+
+- name: Copy files to docker subdirectory
+  ansible.builtin.copy:
+    src: "files/"
+    dest: "{{ project_install_directory }}/manuka/docker/"
+    owner: 1000
+    group: 1000
+    mode: '0644'
+  become: true
+
+- name: Set permissions on elastic files
+  ansible.builtin.file:
+    path: "{{ project_install_directory }}/manuka/docker/elastic"
+    owner: 1000
+    group: 0
+    mode: '0644'
+  become: true
+
+- name: Set traefik kibana proxy password
+  community.general.htpasswd:
+    path: "{{ project_install_directory }}/manuka/docker/traefik/conf/kibana.htpasswd"
+    name: kibana
+    password: "{{ traefik_kibana_proxy_password }}"
+    owner: 1000
+    group: 1000
+    mode: '0644'
+
+- name: Touch log files
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: touch
+    owner: 1000
+    group: 1000
+    mode: '0644'
+  loop:
+    - '{{ project_install_directory }}/manuka/log/traefik/traefik.json'
+    - '{{ project_install_directory }}/manuka/log/traefik/access.log'
+    - '{{ project_install_directory }}/manuka/log/honeypot/cowrie/cowrie.json'
+
+- name: Template .env file
+  ansible.builtin.template:
+    src: .env.j2
+    dest: '{{ project_install_directory }}/manuka/docker/.env'
+    owner: 1000
+    group: 1000
+    mode: '700'
+
+- name: Copy docker-compose file
+  ansible.builtin.copy:
+    src: "files/docker-compose.yml"
+    dest: "{{ project_install_directory }}/manuka/docker/docker-compose.yml"
+    owner: 1000
+    group: 1000
+    mode: '700'
+
+- name: Get public ip and output to ip.env
+  ansible.builtin.script: scripts/get-publicip.sh
+  args:
+    chdir: '{{ project_install_directory }}/manuka/'
+    creates: ip.env

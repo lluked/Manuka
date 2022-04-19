@@ -4,23 +4,22 @@ output "instance_ip" {
 }
 
 output "kibana" {
-  description = "kibana access"
-  value       = "${aws_instance.manuka.public_ip}/xyz"
-}
-
-output "traefik" {
-  description = "traefik access"
-  value       = "${aws_instance.manuka.public_ip}/dashboard/"
+  description = "The URL to access kibana"
+  value       = "https://${aws_instance.manuka.public_ip}/xyz"
 }
 
 output "ssh_port" {
-  value = "50220"
+  value = var.ssh_port
 }
 
 output "ssh_user" {
-  value = "ubuntu"
+  value = var.vm_user
 }
 
 output "ssh_private_key" {
-  value = "./keys/private.pem"
+  value = local_file.private_key_pem.filename
+}
+
+output "ssh" {
+  value = "ssh ${var.vm_user}@${aws_instance.manuka.public_ip} -p ${var.ssh_port} -i ${local_file.private_key_pem.filename}"
 }

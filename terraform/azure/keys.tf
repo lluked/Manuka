@@ -8,6 +8,7 @@ resource "tls_private_key" "manuka" {
 resource "local_file" "private_key_pem" {
   filename = "${path.module}/keys/private.pem"
   content = tls_private_key.manuka.private_key_pem
+  file_permission = 600
 }
 
 # Create public key pem file

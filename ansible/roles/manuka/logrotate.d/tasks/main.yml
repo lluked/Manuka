@@ -1,0 +1,16 @@
+---
+
+- name: Install apache2-utils + pigz
+  ansible.builtin.apt:
+    name: ['apache2-utils', 'pigz']
+    state: present
+  become: true
+
+- name: Copy logrotate config into place
+  ansible.builtin.copy:
+    src: files/manuka
+    dest: /etc/logrotate.d/
+    owner: root
+    group: root
+    mode: '0644'
+  become: true

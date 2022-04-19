@@ -1,0 +1,32 @@
+# /etc/systemd/system/manuka.service
+
+[Unit]
+Description=manuka
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+RestartSec=5
+TimeoutSec=infinity
+
+# Working directory
+WorkingDirectory=/opt/manuka/docker
+
+# Before Start (Remove old containers, images and volumes)
+ExecStartPre=-/usr/local/bin/docker-compose down -v
+ExecStartPre=-/usr/local/bin/docker-compose rm -v
+ExecStartPre=-/bin/bash -c 'docker network rm $(docker network ls -q)'
+ExecStartPre=-/bin/bash -c 'docker volume rm $(docker volume ls -q)'
+ExecStartPre=-/bin/bash -c 'docker rm -v $(docker ps -aq)'
+ExecStartPre=-/bin/bash -c 'docker rmi $(docker images | grep "<none>" | awk \'{print $3}\')'
+ExecStartPre=-/usr/local/bin/docker-compose pull
+
+# Start (Compose up)
+ExecStart=/usr/local/bin/docker-compose up --no-color
+
+# Stop (Compose down, remove volumes)
+ExecStop=/usr/local/bin/docker-compose down -v
+
+[Install]
+WantedBy=multi-user.target

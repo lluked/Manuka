@@ -1,5 +1,5 @@
 .terraform/
-terraform.*
 .terraform.*
+terraform.tfstate*
 *.pem
 *.pub
