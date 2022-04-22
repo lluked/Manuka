@@ -13,14 +13,15 @@ TimeoutSec=infinity
 # Working directory
 WorkingDirectory=/opt/manuka/docker
 
-# Before Start (Remove old containers, images and volumes)
+# Before Start (Stop existing compose, remove old containers, networks and volumes. Pull and build and remove dangling images)
 ExecStartPre=-/usr/local/bin/docker-compose down -v
 ExecStartPre=-/usr/local/bin/docker-compose rm -v
 ExecStartPre=-/bin/bash -c 'docker network rm $(docker network ls -q)'
 ExecStartPre=-/bin/bash -c 'docker volume rm $(docker volume ls -q)'
 ExecStartPre=-/bin/bash -c 'docker rm -v $(docker ps -aq)'
-ExecStartPre=-/bin/bash -c 'docker rmi $(docker images | grep "<none>" | awk \'{print $3}\')'
 ExecStartPre=-/usr/local/bin/docker-compose pull
+ExecStartPre=-/bin/bash -c 'docker build ./honeypot/cowrie'
+ExecStartPre=-/bin/bash -c 'docker rmi $(docker images | grep "<none>" | awk \'{print $3}\')'
 
 # Start (Compose up)
 ExecStart=/usr/local/bin/docker-compose up --no-color
