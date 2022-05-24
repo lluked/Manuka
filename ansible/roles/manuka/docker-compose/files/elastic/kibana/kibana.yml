@@ -1,0 +1,10 @@
+server:
+  name: "Kibana"
+  host: "0.0.0.0"
+  shutdownTimeout: "5s"
+  basePath: "/xyz"
+elasticsearch:
+  hosts: [ "https://es01:9200" ]
+  username: ${ELASTICSEARCH_USERNAME}
+  password: ${ELASTICSEARCH_PASSWORD}
+  ssl.certificateAuthorities: "config/certs/ca/ca.crt"

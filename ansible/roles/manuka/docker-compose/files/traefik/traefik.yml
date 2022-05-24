@@ -1,0 +1,26 @@
+# /etc/traefik/traefik.yml
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entrypoint:
+          to: websecure
+          scheme: https
+  websecure:
+    address: ":443"
+
+providers:
+  file:
+    directory: "/etc/traefik/conf"
+
+log:
+  filePath: "/var/log/traefik.json"
+  format: json
+
+accessLog:
+  filePath: "/var/log/access.log"
+  filters:
+    statusCodes:
+      - "401"

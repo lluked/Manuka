@@ -1,6 +1,0 @@
-# Basic Settings
-node.name: "Logstash-01"
-http.host: "0.0.0.0"
-# Additonal Settings
-xpack.monitoring.enabled: true
-xpack.monitoring.elasticsearch.hosts: [ "http://elasticsearch:9200" ]

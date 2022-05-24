@@ -8,5 +8,5 @@ terraform {
 }
 
 provider "aws" {
-  region = var.EC2_Region
+  region = var.aws_region
 }

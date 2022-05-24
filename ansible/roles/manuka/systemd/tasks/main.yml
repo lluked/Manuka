@@ -1,0 +1,20 @@
+---
+
+- name: Copy manuka.service into place
+  ansible.builtin.copy:
+    src: files/manuka.service
+    dest: /etc/systemd/system/manuka.service
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+
+- name: Reload systemctl daemons
+  ansible.builtin.shell:
+    cmd: systemctl daemon-reload
+  become: true
+
+- name: Enable manuka systemctl daemon
+  ansible.builtin.shell:
+    cmd: systemctl enable manuka
+  become: true

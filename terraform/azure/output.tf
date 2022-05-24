@@ -1,26 +1,25 @@
 output "instance_ip" {
   description = "The public ip for ssh access"
-  value = data.azurerm_public_ip.ip.ip_address
+  value       = azurerm_linux_virtual_machine.manuka.public_ip_address
 }
 
 output "kibana" {
-  description = "kibana access"
-  value       = "${data.azurerm_public_ip.ip.ip_address}/xyz"
-}
-
-output "traefik" {
-  description = "traefik access"
-  value       = "${data.azurerm_public_ip.ip.ip_address}/dashboard/"
+  description = "The URL to access kibana"
+  value       = "https://${azurerm_linux_virtual_machine.manuka.public_ip_address}/xyz"
 }
 
 output "ssh_port" {
-  value = "50220"
+  value = var.ssh_port
 }
 
 output "ssh_user" {
-  value = var.vmUser
+  value = var.vm_user
 }
 
 output "ssh_private_key" {
-  value = "./keys/private.pem"
+  value = local_file.private_key_pem.filename
+}
+
+output "ssh" {
+  value = "ssh ${var.vm_user}@${azurerm_linux_virtual_machine.manuka.public_ip_address} -p ${var.ssh_port} -i ${local_file.private_key_pem.filename}"
 }

@@ -1,0 +1,12 @@
+{{ project_install_directory }}/log/traefik/*.json
+{{ project_install_directory }}/log/traefik/*.log
+{
+        copytruncate
+        create
+	daily
+        missingok
+        notifempty
+	rotate 30
+	compress
+        compresscmd /usr/bin/pigz
+}

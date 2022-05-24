@@ -1,9 +1,0 @@
-# This file is where you define your pipelines. You can define multiple.
-# For more information on multiple pipelines, see the documentation:
-#   https://www.elastic.co/guide/en/logstash/current/multiple-pipelines.html
-
-- pipeline.id: traefik
-  path.config: "/usr/share/logstash/pipeline/{1_in_traefik,2_filter_date,3_out_elasticsearch}.conf"
-
-- pipeline.id: cowrie
-  path.config: "/usr/share/logstash/pipeline/{1_in_cowrie*,2_filter_*,3_out_elasticsearch}.conf"

@@ -1,0 +1,30 @@
+---
+
+- hosts: all
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    # Install directory
+    project_install_directory: "/opt/manuka"
+    # Ports
+    ssh_port: 22
+    cowrie_ssh_port: 2222
+    cowrie_telnet_port: 2223
+    # Passwords
+    traefik_kibana_proxy_password: changeme
+    elastic_password: changeme
+    logstash_system_password: changeme
+    logstash_internal_password: changeme
+    kibana_system_password: changeme
+
+  pre_tasks:
+    - include_tasks: playbooks/update-upgrade.yml
+
+  roles:
+    - role: ansible_facts
+    - role: docker
+    - role: manuka/docker-compose
+    - role: manuka/fail2ban
+    - role: manuka/logrotate.d
+    - role: manuka/systemd
+    - role: ssh
