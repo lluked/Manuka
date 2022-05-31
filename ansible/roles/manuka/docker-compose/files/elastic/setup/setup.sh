@@ -49,7 +49,7 @@ until curl -s -X POST --cacert config/certs/ca/ca.crt -u elastic:${ELASTIC_PASSW
 # Create logstash_writer role
 echo "Creating logstash_writer role";
 until curl -s -X POST --cacert config/certs/ca/ca.crt -u elastic:${ELASTIC_PASSWORD} -H "Content-Type: application/json" https://es01:9200/_security/role/logstash_writer \
--d '{"cluster":["manage_index_templates","monitor","manage_ilm"],"indices":[{"names":["logstash-*"],"privileges":["write","create","create_index","manage","manage_ilm"]}]}' | grep "role"; do sleep 10; done;
+-d '{"cluster":["manage_index_templates","monitor","manage_ilm"],"indices":[{"names":["ecs-logstash-*"],"privileges":["write","create","create_index","manage","manage_ilm"]}]}' | grep "role"; do sleep 10; done;
 
 # Create logstash_internal user
 echo "Creating logstash_internal user";
